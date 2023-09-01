@@ -1,19 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import ButtonBurgerMenu from '../Button/ButtonBurgerMenu';
 import NavItems from './NavbarItems';
+import { GlobalContext } from '@/app/context';
+import Modal from '../Modal';
+import useMediaQuery from '@/app/hooks/useMediaQuery';
 
 type Props = {};
 
-const isAdminView = true;
+const isAdminView = false;
 const isAuthedUser = true;
 const user = {
   role: 'admin',
 };
 
 const Navbar = (props: Props) => {
-  const [showNavModal, setShowNavModal] = useState(false);
+  const { showNavModal, setShowNavModal } = useContext(GlobalContext);
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   return (
     <>
@@ -49,11 +53,22 @@ const Navbar = (props: Props) => {
             )}
           </div>
 
-          <ButtonBurgerMenu onClick={() => setShowNavModal(true)} />
+          <ButtonBurgerMenu
+            onClick={() => setShowNavModal((prev: boolean) => !prev)}
+          />
           {/* Middle navbar items */}
-          <NavItems isAdminView={isAdminView} />
+          <NavItems show={!isSmallScreen} isAdminView={isAdminView} />
         </div>
       </nav>
+
+      <div className='md:bg-inherit'></div>
+
+      <Modal
+        content={<NavItems show isAdminView={isAdminView} />}
+        showModalTitle={false}
+        show={showNavModal}
+        onClose={() => setShowNavModal(false)}
+      />
     </>
   );
 };
