@@ -1,8 +1,8 @@
 import React from 'react';
 import { LOGIN_FORM_CONTROLS, REGISTRATION_FORM_CONTROLS } from '../consts';
-import Input from '../component/Form/Input';
-import Select from '../component/Form/Select';
 import Link from 'next/link';
+import Select from '@/component/Form/Select';
+import Input from '@/component/Form/Input';
 
 type Props = {};
 

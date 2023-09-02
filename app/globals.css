@@ -44,7 +44,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .input-label {
-  @apply absolute bg-white pt-0 pb-0 pl-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600;
+  @apply absolute bg-white py-0 px-2 -mt-3 mr-0 mb-0 ml-2 font-medium text-gray-600;
 }
 
 .input {
