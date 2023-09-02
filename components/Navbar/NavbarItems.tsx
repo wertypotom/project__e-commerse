@@ -1,6 +1,6 @@
 import { ADMIN_NAV_OPTIONS, NAV_OPTIONS } from '@/app/consts';
-import useMediaQuery from '@/app/hooks/useMediaQuery';
-import { NavOptions } from '@/app/types/navigation';
+import useMediaQuery from '@/hooks/useMediaQuery';
+import { NavOptions } from '@/types/navigation';
 
 type Props = {
   show: boolean;

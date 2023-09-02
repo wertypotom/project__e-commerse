@@ -1,4 +1,4 @@
-import { Options } from '@/app/types/input';
+import { Options } from '@/types/input';
 import React from 'react';
 
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {

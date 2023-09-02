@@ -1,5 +1,5 @@
-import { FormControlFields } from './types/input';
-import { NavOptions } from './types/navigation';
+import { FormControlFields } from '@/types/input';
+import { NavOptions } from '@/types/navigation';
 
 export const NAV_OPTIONS: NavOptions[] = [
   {

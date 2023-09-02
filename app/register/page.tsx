@@ -1,23 +1,71 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { REGISTRATION_FORM_CONTROLS } from '../consts';
-import Input from '../component/Form/Input';
-import Select from '../component/Form/Select';
+import Input from '@/components/Form/Input';
+import Select from '@/components/Form/Select';
+import { IUser } from '@/types/user';
+import { userSchemaForValidationOnRegistration } from '@/utils/validation';
+import { registerUser } from '@/services/registration';
 
 type Props = {};
 
 const isRegistered = false;
 
+const initialFormData: IUser = {
+  name: '',
+  email: '',
+  password: '',
+  role: 'customer',
+};
+
 const RegistrationPage = (props: Props) => {
+  const [formData, setFormData] = useState<IUser>(initialFormData);
+
+  const handleFormDataChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const { error: userFieldsValidationError } =
+    userSchemaForValidationOnRegistration.validate({
+      ...formData,
+    });
+
+  const handleRegisterOnSubmit = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const data = await registerUser(formData);
+    setFormData(initialFormData);
+
+    console.log(data);
+  };
+
   const renderFormFields = () => {
     return REGISTRATION_FORM_CONTROLS.map((item) => {
       return item.componentType === 'input' ? (
         <Input
+          key={item.id}
           inputLabel={item.label}
+          name={item.label.toLowerCase()}
           type={item.type}
           placeholder={item.placeholder}
+          onChange={handleFormDataChange}
+          value={formData[item.label.toLowerCase() as keyof typeof formData]}
         />
       ) : (
-        <Select inputLabel={item.label} options={item.options!} />
+        <Select
+          key={item.id}
+          name={item.label.toLowerCase()}
+          inputLabel={item.label}
+          options={item.options!}
+          onChange={handleFormDataChange}
+          value={formData[item.label.toLowerCase() as keyof typeof formData]}
+        />
       );
     });
   };
@@ -40,7 +88,13 @@ const RegistrationPage = (props: Props) => {
                   {renderFormFields()}
                 </div>
               )}
-              <button className='btn-full'>Register</button>
+              <button
+                disabled={!!userFieldsValidationError}
+                className='btn-full'
+                onClick={handleRegisterOnSubmit}
+              >
+                Register
+              </button>
             </div>
           </div>
         </div>
@@ -48,7 +102,5 @@ const RegistrationPage = (props: Props) => {
     </div>
   );
 };
-
-// inline-flex w-full items-center bg-black px-6 py-4 text-lg text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide
 
 export default RegistrationPage;

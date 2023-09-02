@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useContext } from 'react';
-import ButtonBurgerMenu from '../Button/ButtonBurgerMenu';
 import NavItems from './NavbarItems';
-import { GlobalContext } from '@/app/context';
 import Modal from '../Modal';
-import useMediaQuery from '@/app/hooks/useMediaQuery';
+import { GlobalContext } from '@/context';
+import useMediaQuery from '@/hooks/useMediaQuery';
+import ButtonBurgerMenu from '../Button/ButtonBurgerMenu';
 
 type Props = {};
 
@@ -60,8 +60,6 @@ const Navbar = (props: Props) => {
           <NavItems show={!isSmallScreen} isAdminView={isAdminView} />
         </div>
       </nav>
-
-      <div className='md:bg-inherit'></div>
 
       <Modal
         content={<NavItems show isAdminView={isAdminView} />}

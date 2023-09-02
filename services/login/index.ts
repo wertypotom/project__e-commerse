@@ -1,8 +1,8 @@
 import { IUser } from '@/types/user';
 
-export const registerUser = async (formData: IUser) => {
+export const loginUser = async (formData: Partial<IUser>) => {
   try {
-    const response = await fetch('/api/register', {
+    const response = await fetch('/api/login', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

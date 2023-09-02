@@ -1,19 +1,8 @@
 import connectToDb from '@/database';
 import User from '@/models/user';
-import Joi from 'joi';
 import { NextRequest, NextResponse } from 'next/server';
 import { hash } from 'bcryptjs';
-
-// Joi is used for validation purposes
-const schema = Joi.object({
-  name: Joi.string().alphanum().required(),
-  email: Joi.string().email().required(),
-  password: Joi.string()
-    .min(6)
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-    .required(),
-  role: Joi.string().required(),
-});
+import { userSchemaForValidationOnRegistration } from '@/utils/validation';
 
 // 'force-dynamic': Force dynamic rendering and uncached data fetching of a layout or page by disabling all caching of fetch requests and always revalidating.
 export const dynamic = 'force-dynamic';
@@ -23,7 +12,12 @@ export async function POST(req: NextRequest) {
 
   const { name, email, password, role } = await req.json();
 
-  const { error } = schema.validate({ name, email, password, role });
+  const { error } = userSchemaForValidationOnRegistration.validate({
+    name,
+    email,
+    password,
+    role,
+  });
 
   // Validation Error
   if (error)
@@ -40,7 +34,7 @@ export async function POST(req: NextRequest) {
     if (isUserExists) {
       return NextResponse.json({
         status: 'fail',
-        message: 'User with such email already exists',
+        message: `User with such email ${email} already exists`,
       });
     }
 
@@ -57,6 +51,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         status: 'success',
         message: 'Account created successfully',
+        data: {
+          user: newUser,
+        },
       });
     }
   } catch (error) {

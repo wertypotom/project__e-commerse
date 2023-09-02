@@ -1,22 +1,69 @@
-import React from 'react';
-import { LOGIN_FORM_CONTROLS, REGISTRATION_FORM_CONTROLS } from '../consts';
+'use client';
+
+import React, { useState } from 'react';
+import { LOGIN_FORM_CONTROLS } from '../consts';
 import Link from 'next/link';
-import Select from '@/component/Form/Select';
-import Input from '@/component/Form/Input';
+import Select from '@/components/Form/Select';
+import Input from '@/components/Form/Input';
+import { IUser } from '@/types/user';
+import { loginUser } from '@/services/login';
+import { userSchemaForValidationOnLogin } from '@/utils/validation';
+import { useRouter } from 'next/navigation';
 
 type Props = {};
 
+const initialFormData: Partial<IUser> = {
+  email: '',
+  password: '',
+};
+
 const LoginPage = (props: Props) => {
+  const [formData, setFormData] = useState<Partial<IUser>>(initialFormData);
+  const router = useRouter();
+
+  const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const { error: userFieldsValidationError } =
+    userSchemaForValidationOnLogin.validate({
+      ...formData,
+    });
+
+  const handleLoginUser = async () => {
+    const data = await loginUser(formData);
+
+    // TODO: Check for redirect after login
+    if (!!data.user) {
+      router.push('');
+    }
+
+    setFormData(initialFormData);
+  };
+
   const renderFormFields = () => {
     return LOGIN_FORM_CONTROLS.map((item) => {
       return item.componentType === 'input' ? (
         <Input
+          key={item.id}
           inputLabel={item.label}
           type={item.type}
           placeholder={item.placeholder}
+          name={item.label.toLowerCase()}
+          onChange={handleFormDataChange}
+          value={formData[item.label.toLowerCase() as keyof typeof formData]}
         />
       ) : (
-        <Select inputLabel={item.label} options={item.options!} />
+        <Select
+          key={item.id}
+          inputLabel={item.label}
+          options={item.options!}
+          name={item.label.toLowerCase()}
+          value={formData[item.label.toLowerCase() as keyof typeof formData]}
+        />
       );
     });
   };
@@ -35,7 +82,13 @@ const LoginPage = (props: Props) => {
                 {renderFormFields()}
               </div>
 
-              <button className='btn-full'>Login</button>
+              <button
+                disabled={!!userFieldsValidationError}
+                className='btn-full'
+                onClick={handleLoginUser}
+              >
+                Login
+              </button>
 
               <div className='flex flex-col gap-2 self-start mt-8'>
                 New to website ?
