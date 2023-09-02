@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { REGISTRATION_FORM_CONTROLS } from '../consts';
 import Input from '@/components/Form/Input';
 import Select from '@/components/Form/Select';
 import { IUser } from '@/types/user';
 import { userSchemaForValidationOnRegistration } from '@/utils/validation';
 import { registerUser } from '@/services/registration';
+import { GlobalContext } from '@/context';
+import { redirect } from 'next/navigation';
 
 type Props = {};
 
@@ -21,6 +23,7 @@ const initialFormData: IUser = {
 
 const RegistrationPage = (props: Props) => {
   const [formData, setFormData] = useState<IUser>(initialFormData);
+  const { isAuthedUser } = useContext(GlobalContext);
 
   const handleFormDataChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -30,6 +33,12 @@ const RegistrationPage = (props: Props) => {
       [event.target.name]: event.target.value,
     });
   };
+
+  useEffect(() => {
+    if (isAuthedUser) {
+      redirect('/');
+    }
+  }, [isAuthedUser]);
 
   const { error: userFieldsValidationError } =
     userSchemaForValidationOnRegistration.validate({

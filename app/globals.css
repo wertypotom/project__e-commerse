@@ -40,7 +40,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .btn-full {
-  @apply flex justify-center w-full mt-1.5  bg-black px-5 py-5 text-base uppercase tracking-wide text-white disabled:bg-gray-500;
+  @apply flex justify-center w-full mt-1.5  bg-black px-5 py-5 text-base uppercase tracking-wide text-white disabled:opacity-50;
 }
 
 .input-label {

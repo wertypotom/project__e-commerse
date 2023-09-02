@@ -1,6 +1,16 @@
 import { IUser } from '@/types/user';
 
-export const registerUser = async (formData: IUser) => {
+type ReturnType = {
+  status: string;
+  message: string;
+  data: {
+    user: IUser;
+  };
+};
+
+export const registerUser = async (
+  formData: IUser
+): Promise<ReturnType | undefined> => {
   try {
     const response = await fetch('/api/register', {
       method: 'POST',

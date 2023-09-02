@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LOGIN_FORM_CONTROLS } from '../consts';
 import Link from 'next/link';
 import Select from '@/components/Form/Select';
@@ -8,7 +8,11 @@ import Input from '@/components/Form/Input';
 import { IUser } from '@/types/user';
 import { loginUser } from '@/services/login';
 import { userSchemaForValidationOnLogin } from '@/utils/validation';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
+import { GlobalContext } from '@/context';
+import Cookies from 'js-cookie';
+import ComponentLevelLoader from '@/components/Loader';
+import { toast, ToastContainer } from 'react-toastify';
 
 type Props = {};
 
@@ -18,8 +22,16 @@ const initialFormData: Partial<IUser> = {
 };
 
 const LoginPage = (props: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<Partial<IUser>>(initialFormData);
-  const router = useRouter();
+  const { isAuthedUser, setIsAuthedUser, user, setUser } =
+    useContext(GlobalContext);
+
+  useEffect(() => {
+    if (isAuthedUser) {
+      redirect('/');
+    }
+  }, [isAuthedUser]);
 
   const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -34,14 +46,42 @@ const LoginPage = (props: Props) => {
     });
 
   const handleLoginUser = async () => {
-    const data = await loginUser(formData);
+    // TODO: Rewrite to Next-auth
 
-    // TODO: Check for redirect after login
-    if (!!data.user) {
-      router.push('');
+    try {
+      setIsLoading(true);
+      const data = await loginUser(formData);
+
+      if (!data?.data) throw new Error(data?.message);
+
+      toast.success(data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      setIsAuthedUser(true);
+      setUser(data.data.user);
+
+      Cookies.set('token', data.data.token);
+      localStorage.setItem('user', JSON.stringify(data.data.user));
+    } catch (err) {
+      toast.error((err as Error).message, {
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        position: toast.POSITION.TOP_RIGHT,
+      });
+
+      setIsAuthedUser(false);
+      setUser(undefined);
+    } finally {
+      setFormData(initialFormData);
+      setIsLoading(false);
     }
-
-    setFormData(initialFormData);
   };
 
   const renderFormFields = () => {
@@ -87,8 +127,18 @@ const LoginPage = (props: Props) => {
                 className='btn-full'
                 onClick={handleLoginUser}
               >
-                Login
+                {isLoading ? (
+                  <ComponentLevelLoader
+                    text={'Logging In'}
+                    color={'#ffffff'}
+                    loading={isLoading}
+                  />
+                ) : (
+                  'Login'
+                )}
               </button>
+
+              <ToastContainer className='mt-20' />
 
               <div className='flex flex-col gap-2 self-start mt-8'>
                 New to website ?
@@ -104,7 +154,5 @@ const LoginPage = (props: Props) => {
     </div>
   );
 };
-
-// inline-flex w-full items-center bg-black px-6 py-4 text-lg text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide
 
 export default LoginPage;

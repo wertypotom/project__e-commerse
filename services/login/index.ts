@@ -1,6 +1,17 @@
 import { IUser } from '@/types/user';
 
-export const loginUser = async (formData: Partial<IUser>) => {
+type ReturnType = {
+  status: string;
+  message: string;
+  data: {
+    token: string;
+    user: IUser & { id: string };
+  };
+};
+
+export const loginUser = async (
+  formData: Partial<IUser>
+): Promise<ReturnType | undefined> => {
   try {
     const response = await fetch('/api/login', {
       method: 'POST',
