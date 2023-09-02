@@ -22,3 +22,14 @@ export const userSchemaForValidationOnLogin = Joi.object({
     .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
     .required(),
 });
+
+export const productSchemaToAddNewOne = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+  price: Joi.number().required(),
+  category: Joi.string().required(),
+  sizes: Joi.array().required(),
+  onSale: Joi.string().required(),
+  priceDrop: Joi.number().required(),
+  imageUrl: Joi.string().required(),
+});

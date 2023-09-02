@@ -1,11 +1,20 @@
-export type FormControlFields = {
+export interface BaseFormControlFields {
   id: string;
-  type: string;
   placeholder: string;
   label: string;
-  componentType: 'select' | 'input';
-  options?: Options[];
-};
+}
+
+export interface InputControlFields extends BaseFormControlFields {
+  componentType: 'input';
+  type: string;
+}
+
+export interface SelectControlFields extends BaseFormControlFields {
+  componentType: 'select';
+  options: Options[];
+}
+
+export type FormControlFields = InputControlFields | SelectControlFields;
 
 export type Options = {
   value: string;

@@ -60,20 +60,20 @@ const RegistrationPage = (props: Props) => {
         <Input
           key={item.id}
           inputLabel={item.label}
-          name={item.label.toLowerCase()}
+          name={item.id}
           type={item.type}
           placeholder={item.placeholder}
           onChange={handleFormDataChange}
-          value={formData[item.label.toLowerCase() as keyof typeof formData]}
+          value={formData[item.id as keyof typeof formData]}
         />
       ) : (
         <Select
           key={item.id}
-          name={item.label.toLowerCase()}
+          name={item.id}
           inputLabel={item.label}
           options={item.options!}
           onChange={handleFormDataChange}
-          value={formData[item.label.toLowerCase() as keyof typeof formData]}
+          value={formData[item.id as keyof typeof formData]}
         />
       );
     });

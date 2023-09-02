@@ -92,17 +92,17 @@ const LoginPage = (props: Props) => {
           inputLabel={item.label}
           type={item.type}
           placeholder={item.placeholder}
-          name={item.label.toLowerCase()}
+          name={item.id}
           onChange={handleFormDataChange}
-          value={formData[item.label.toLowerCase() as keyof typeof formData]}
+          value={formData[item.id as keyof typeof formData]}
         />
       ) : (
         <Select
           key={item.id}
           inputLabel={item.label}
           options={item.options!}
-          name={item.label.toLowerCase()}
-          value={formData[item.label.toLowerCase() as keyof typeof formData]}
+          name={item.id}
+          value={formData[item.id as keyof typeof formData]}
         />
       );
     });

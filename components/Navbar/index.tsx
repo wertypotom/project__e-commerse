@@ -24,7 +24,7 @@ const Navbar = (props: Props) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isAdminView = pathname === '/admin-view';
+  const isAdminView = pathname.includes('admin-view');
 
   const handleLogout = () => {
     setIsAuthedUser(false);
@@ -34,7 +34,10 @@ const Navbar = (props: Props) => {
     router.push('/');
   };
 
-  const navigateTo = (route: string) => router.push(route);
+  const navigateTo = (route: string) => {
+    router.push(route);
+    setShowNavModal(false);
+  };
 
   return (
     <>
