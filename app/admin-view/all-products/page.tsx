@@ -1,9 +1,14 @@
+import ProductList from '@/components/ProductList';
+import { getAllAdminProducts } from '@/services/product';
 import React from 'react';
 
-type Props = {};
+const AdminAllProducts = async () => {
+  const data = await getAllAdminProducts();
 
-const AdminAllProducts = (props: Props) => {
-  return <div>AdminAllProducts</div>;
+  if (!data?.data.products) {
+    return <h1>No Products Found</h1>;
+  }
+  return <ProductList data={data.data.products} />;
 };
 
 export default AdminAllProducts;
