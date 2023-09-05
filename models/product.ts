@@ -1,7 +1,8 @@
+import { Options } from '@/types/input';
 import { IProduct } from '@/types/product';
 import { Schema, model, models, Types } from 'mongoose';
 
-const productSchema = new Schema<IProduct<Types.Array<string>>>(
+const productSchema = new Schema<IProduct<Types.Array<Options>>>(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
@@ -11,7 +12,7 @@ const productSchema = new Schema<IProduct<Types.Array<string>>>(
     imageUrl: { type: String, required: true },
     onSale: { type: String, required: true },
     deliveryInfo: { type: String, required: true },
-    sizes: { type: [String], required: true },
+    sizes: { type: [{ value: String, label: String }], required: true },
   },
   // timestamp for createdAt and updatedAt
   { timestamps: true }
@@ -19,6 +20,6 @@ const productSchema = new Schema<IProduct<Types.Array<string>>>(
 
 const Product =
   models.Product ||
-  model<IProduct<Types.Array<string>>>('Product', productSchema);
+  model<IProduct<Types.Array<Options>>>('Product', productSchema);
 
 export default Product;

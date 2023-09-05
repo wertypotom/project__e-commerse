@@ -23,6 +23,11 @@ import {
 } from '@/utils/filesHandler';
 import { IProduct } from '@/types/product';
 import { Options } from '@/types/input';
+import { addNewProduct } from '@/services/product';
+import { showErrorToast, showSuccessToast } from '@/utils/toastHandler';
+import { ToastContainer } from 'react-toastify';
+import ComponentLevelLoader from '@/components/Loader';
+import { useRouter } from 'next/navigation';
 
 const app = initializeApp(FIREBASE_CONFIG);
 const storage = getStorage(app, FIREBASE_STORAGE_URL);
@@ -44,6 +49,7 @@ const initialFormData: IProduct<any[]> = {
 const AdminAddNewProduct = (props: Props) => {
   const [formData, setFormData] = useState(initialFormData);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleUploadImage = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -72,7 +78,7 @@ const AdminAddNewProduct = (props: Props) => {
     });
   };
 
-  const handleSizeSelect = (value: Options) => {
+  const handleSelectSizes = (value: Options) => {
     let sizes = [...formData.sizes];
     const index = sizes.findIndex((item) => item.value === value.value);
 
@@ -86,6 +92,26 @@ const AdminAddNewProduct = (props: Props) => {
       ...formData,
       sizes,
     });
+  };
+
+  const handleAddProduct = async () => {
+    try {
+      setIsLoading(true);
+      const res = await addNewProduct(formData);
+
+      if (!res?.data) throw new Error(res?.message);
+
+      showSuccessToast(res.message);
+      setFormData(initialFormData);
+
+      setTimeout(() => {
+        router.push('/admin-view/all-products');
+      }, 1000);
+    } catch (error) {
+      showErrorToast((error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -102,7 +128,7 @@ const AdminAddNewProduct = (props: Props) => {
             <label>Available sizes</label>
             <Tiles
               data={AVAILABLE_SIZES}
-              onClick={handleSizeSelect}
+              onClick={handleSelectSizes}
               selected={formData.sizes}
             />
           </div>
@@ -131,7 +157,19 @@ const AdminAddNewProduct = (props: Props) => {
             );
           })}
 
-          <button className='btn-full'>Add product</button>
+          <ToastContainer className='mt-20' />
+
+          <button onClick={handleAddProduct} className='btn-full'>
+            {isLoading ? (
+              <ComponentLevelLoader
+                text={'Adding new product'}
+                color={'#ffffff'}
+                loading={isLoading}
+              />
+            ) : (
+              'Add Product'
+            )}
+          </button>
         </div>
       </div>
     </div>

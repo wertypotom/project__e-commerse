@@ -64,11 +64,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       status: 'success',
       message: 'Product added successfully',
+      data: {
+        product: newProduct,
+      },
     });
   } catch (error) {
     return NextResponse.json({
       status: 'fail',
       message: 'Something went wrong. Please try again',
+      error,
     });
   }
 }

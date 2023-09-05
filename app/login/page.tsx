@@ -13,6 +13,7 @@ import { GlobalContext } from '@/context';
 import Cookies from 'js-cookie';
 import ComponentLevelLoader from '@/components/Loader';
 import { toast, ToastContainer } from 'react-toastify';
+import { showErrorToast, showSuccessToast } from '@/utils/toastHandler';
 
 type Props = {};
 
@@ -54,28 +55,14 @@ const LoginPage = (props: Props) => {
 
       if (!data?.data) throw new Error(data?.message);
 
-      toast.success(data.message, {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-
+      showSuccessToast(data.message);
       setIsAuthedUser(true);
       setUser(data.data.user);
 
       Cookies.set('token', data.data.token);
       localStorage.setItem('user', JSON.stringify(data.data.user));
     } catch (err) {
-      toast.error((err as Error).message, {
-        autoClose: 3000,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        position: toast.POSITION.TOP_RIGHT,
-      });
-
+      showErrorToast((err as Error).message);
       setIsAuthedUser(false);
       setUser(undefined);
     } finally {

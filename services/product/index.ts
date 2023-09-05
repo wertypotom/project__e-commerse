@@ -1,6 +1,18 @@
+import { Options } from '@/types/input';
+import { IProduct } from '@/types/product';
 import Cookies from 'js-cookie';
 
-export const addNewProduct = async (formData): Promise<any> => {
+type ReturnType = {
+  status: string;
+  message: string;
+  data: {
+    product: IProduct<Options[]>;
+  };
+};
+
+export const addNewProduct = async (
+  formData: IProduct<any[]>
+): Promise<ReturnType | undefined> => {
   try {
     const response = await fetch('/api/admin/add-product', {
       method: 'POST',
