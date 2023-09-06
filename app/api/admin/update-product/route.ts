@@ -70,6 +70,7 @@ export async function PUT(req: NextRequest) {
       data: {
         product: product,
       },
+      message: 'Product updated successfully !',
     });
   } catch (error) {
     return NextResponse.json({

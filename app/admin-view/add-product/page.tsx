@@ -16,25 +16,27 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from 'firebase/storage';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   extractImageUrlFirebase,
   getUniqueFilename,
 } from '@/utils/filesHandler';
-import { IProduct } from '@/types/product';
+import { IProduct, IProductWithServerId } from '@/types/product';
 import { Options } from '@/types/input';
-import { addNewProduct } from '@/services/product';
+import { addNewProduct, updateProduct } from '@/services/product';
 import { showErrorToast, showSuccessToast } from '@/utils/toastHandler';
 import { ToastContainer } from 'react-toastify';
 import ComponentLevelLoader from '@/components/Loader';
 import { useRouter } from 'next/navigation';
+import { GlobalContext } from '@/context';
 
 const app = initializeApp(FIREBASE_CONFIG);
 const storage = getStorage(app, FIREBASE_STORAGE_URL);
 
 type Props = {};
 
-const initialFormData: IProduct<any[]> = {
+const initialFormData: IProductWithServerId<any[]> = {
+  _id: '',
   name: '',
   price: 0,
   description: '',
@@ -47,7 +49,9 @@ const initialFormData: IProduct<any[]> = {
 };
 
 const AdminAddNewProduct = (props: Props) => {
-  const [formData, setFormData] = useState(initialFormData);
+  const { selectedProduct } = useContext(GlobalContext);
+
+  const [formData, setFormData] = useState(selectedProduct || initialFormData);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -97,7 +101,9 @@ const AdminAddNewProduct = (props: Props) => {
   const handleAddProduct = async () => {
     try {
       setIsLoading(true);
-      const res = await addNewProduct(formData);
+      const res = !!selectedProduct
+        ? await updateProduct(formData)
+        : await addNewProduct(formData);
 
       if (!res?.data) throw new Error(res?.message);
 
@@ -162,10 +168,16 @@ const AdminAddNewProduct = (props: Props) => {
           <button onClick={handleAddProduct} className='btn-full'>
             {isLoading ? (
               <ComponentLevelLoader
-                text={'Adding new product'}
+                text={
+                  selectedProduct
+                    ? 'Updating the product'
+                    : 'Adding new product'
+                }
                 color={'#ffffff'}
                 loading={isLoading}
               />
+            ) : selectedProduct ? (
+              'Update Product'
             ) : (
               'Add Product'
             )}

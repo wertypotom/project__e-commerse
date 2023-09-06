@@ -1,16 +1,52 @@
 'use client';
 
 import { IUser } from '@/types/user';
-import { createContext, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import Cookies from 'js-cookie';
-import { IProduct } from '@/types/product';
+import { IProduct, IProductWithServerId } from '@/types/product';
 import { Options } from '@/types/input';
+
+type TypeSetState<T> = Dispatch<SetStateAction<T>>;
 
 type GlobalStateProps = {
   children: React.ReactNode;
 };
 
-export const GlobalContext = createContext<any | null>(null);
+type GlobalContextProviderProps = {
+  showNavModal: boolean;
+  setShowNavModal: TypeSetState<boolean>;
+  isAuthedUser: boolean;
+  setIsAuthedUser: TypeSetState<boolean>;
+  user: Partial<IUser & { id: string }> | undefined;
+  setUser: TypeSetState<
+    | Partial<
+        IUser & {
+          id: string;
+        }
+      >
+    | undefined
+  >;
+  selectedProduct: IProductWithServerId<Options[]> | null;
+  setSelectedProduct: TypeSetState<IProductWithServerId<Options[]> | null>;
+};
+
+export const GlobalContext = createContext<GlobalContextProviderProps>({
+  isAuthedUser: false,
+  selectedProduct: null,
+  showNavModal: false,
+  user: undefined,
+  setIsAuthedUser: () => {},
+  setSelectedProduct: () => {},
+  setShowNavModal: () => {},
+  setUser: () => {},
+});
 
 export default function GlobalState({ children }: GlobalStateProps) {
   const [showNavModal, setShowNavModal] = useState(false);
@@ -18,9 +54,9 @@ export default function GlobalState({ children }: GlobalStateProps) {
   const [user, setUser] = useState<Partial<IUser & { id: string }> | undefined>(
     undefined
   );
-  const [selectedProduct, setSelectedProduct] = useState<
-    (IProduct<Options[]> & { id: string }) | null
-  >(null);
+  const [selectedProduct, setSelectedProduct] = useState<IProductWithServerId<
+    Options[]
+  > | null>(null);
 
   useEffect(() => {
     if (!Cookies.get('token')) return;
@@ -33,18 +69,21 @@ export default function GlobalState({ children }: GlobalStateProps) {
     setIsAuthedUser(true);
   }, []);
 
+  const value: GlobalContextProviderProps = useMemo(
+    () => ({
+      showNavModal,
+      setShowNavModal,
+      isAuthedUser,
+      setIsAuthedUser,
+      user,
+      setUser,
+      selectedProduct,
+      setSelectedProduct,
+    }),
+    [isAuthedUser, selectedProduct, showNavModal, user]
+  );
+
   return (
-    <GlobalContext.Provider
-      value={{
-        showNavModal,
-        setShowNavModal,
-        isAuthedUser,
-        setIsAuthedUser,
-        user,
-        setUser,
-      }}
-    >
-      {children}
-    </GlobalContext.Provider>
+    <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
   );
 }

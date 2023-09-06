@@ -1,14 +1,24 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect } from 'react';
 import ProductTile from './ProductTile';
 import ProductButtons from './ProductButtons';
-import { IProduct } from '@/types/product';
+import { IProductWithServerId } from '@/types/product';
 import { Options } from '@/types/input';
+import { useRouter } from 'next/navigation';
 
 type Props = {
-  data: (IProduct<Options[]> & { id: string })[];
+  data: IProductWithServerId<Options[]>[];
 };
 
 const ProductList = ({ data }: Props) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    // refresh page, because it is client component
+    router.refresh();
+  }, [router]);
+
   return (
     <section className='bg-white py-12 sm:py-16'>
       <div className='mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8'>
@@ -17,7 +27,7 @@ const ProductList = ({ data }: Props) => {
             data.map((item) => (
               <article
                 className='relative flex flex-col overflow-hidden border cursor-pointer'
-                key={item.id}
+                key={item._id}
               >
                 <ProductTile item={item} />
                 <ProductButtons item={item} />

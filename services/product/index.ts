@@ -1,5 +1,5 @@
 import { Options } from '@/types/input';
-import { IProduct } from '@/types/product';
+import { IProduct, IProductWithServerId } from '@/types/product';
 import Cookies from 'js-cookie';
 
 type ReturnTypeToAddProduct = {
@@ -14,7 +14,7 @@ type ReturnTypeToGetProducts = {
   status: string;
   message: string;
   data: {
-    products: (IProduct<Options[]> & { id: string })[];
+    products: IProductWithServerId<Options[]>[];
   };
 };
 

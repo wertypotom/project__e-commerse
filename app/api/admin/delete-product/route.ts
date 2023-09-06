@@ -46,6 +46,7 @@ export async function DELETE(req: NextRequest) {
       data: {
         product: product,
       },
+      message: 'Product deleted successfully !',
     });
   } catch (error) {
     return NextResponse.json({

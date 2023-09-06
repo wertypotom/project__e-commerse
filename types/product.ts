@@ -1,4 +1,4 @@
-export type IProduct<T> = {
+export interface IProduct<T> {
   name: string;
   description: string;
   price: number;
@@ -8,4 +8,8 @@ export type IProduct<T> = {
   onSale: 'yes' | 'no';
   priceDrop: number;
   imageUrl: string;
-};
+}
+
+export interface IProductWithServerId<T> extends IProduct<T> {
+  _id: string;
+}

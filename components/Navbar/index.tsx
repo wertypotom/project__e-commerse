@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import NavItems from './NavbarItems';
 import Modal from '../Modal';
 import { GlobalContext } from '@/context';
@@ -19,6 +19,8 @@ const Navbar = (props: Props) => {
     user,
     setIsAuthedUser,
     setUser,
+    selectedProduct,
+    setSelectedProduct,
   } = useContext(GlobalContext);
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
   const router = useRouter();
@@ -26,9 +28,15 @@ const Navbar = (props: Props) => {
 
   const isAdminView = pathname.includes('admin-view');
 
+  useEffect(() => {
+    if (pathname !== '/admin-view/add-product') {
+      setSelectedProduct(null);
+    }
+  }, [pathname, setSelectedProduct]);
+
   const handleLogout = () => {
     setIsAuthedUser(false);
-    setUser(false);
+    setUser(undefined);
     localStorage.clear();
     Cookies.remove('token');
     router.push('/');
