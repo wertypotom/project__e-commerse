@@ -53,6 +53,7 @@ const ProductButton = ({ item }: Props) => {
             Update
           </button>
           <button
+            disabled={isLoading}
             onClick={() => handleDeleteProduct(item._id || '')}
             className='btn'
           >

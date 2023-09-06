@@ -18,6 +18,14 @@ type ReturnTypeToGetProducts = {
   };
 };
 
+type ReturnTypeToGetProduct = {
+  status: string;
+  message: string;
+  data: {
+    product: IProductWithServerId<Options[]>;
+  };
+};
+
 export const addNewProduct = async (
   formData: IProductWithServerId<any[]>
 ): Promise<ReturnTypeToAddProduct | undefined> => {
@@ -97,9 +105,27 @@ export const getProductsByCategory = async (
   category: string
 ): Promise<ReturnTypeToGetProducts | undefined> => {
   try {
-    console.log('calling');
     const response = await fetch(
       `http://localhost:3000/api/client/product-by-category?category=${category}`,
+      {
+        method: 'GET',
+        cache: 'no-store',
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getProductById = async (
+  id: string
+): Promise<ReturnTypeToGetProduct | undefined> => {
+  try {
+    console.log('id', id);
+    const response = await fetch(
+      `http://localhost:3000/api/client/product-by-id?id=${id}`,
       {
         method: 'GET',
         cache: 'no-store',

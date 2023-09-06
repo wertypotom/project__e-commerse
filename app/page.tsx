@@ -74,39 +74,35 @@ export default function Home() {
             </div>
             <div className='lg:col-span-2 lg:py-8'>
               <ul className='grid grid-cols-2 gap-4'>
-                {products && products.length
-                  ? products
-                      .filter((item) => item.onSale === 'yes')
-                      .splice(0, 2)
-                      .map((productItem) => (
-                        <li
-                          onClick={() =>
-                            router.push(`/product/item/${productItem._id}`)
-                          }
-                          className='cursor-pointer'
-                          key={productItem._id}
-                        >
-                          <div>
-                            <Image
-                              width={10000}
-                              height={10000}
-                              src={productItem.imageUrl}
-                              alt='Sale Product Item'
-                              className='object-cover w-full rounded aspect-square'
-                            />
-                          </div>
-                          <div className='mt-3'>
-                            <h3 className='font-medium text-gray-900'>
-                              {productItem.name}
-                            </h3>
-                            <p className='mt-1 text-sm text-gray-800'>
-                              ${productItem.price}{' '}
-                              <span className='text-red-700'>{`(-${productItem.priceDrop}%) Off`}</span>
-                            </p>
-                          </div>
-                        </li>
-                      ))
-                  : null}
+                {products
+                  .filter((item) => item.onSale === 'yes')
+                  .splice(0, 2)
+                  .map((item) => (
+                    <li
+                      onClick={() => router.push(`/product/item/${item._id}`)}
+                      className='cursor-pointer'
+                      key={item._id}
+                    >
+                      <div>
+                        <Image
+                          width={10000}
+                          height={10000}
+                          src={item.imageUrl}
+                          alt='Sale Product Item'
+                          className='object-cover w-full rounded aspect-square'
+                        />
+                      </div>
+                      <div className='mt-3'>
+                        <h3 className='font-medium text-gray-900'>
+                          {item.name}
+                        </h3>
+                        <p className='mt-1 text-sm text-gray-800'>
+                          ${item.price}{' '}
+                          <span className='text-red-700'>{`(-${item.priceDrop}%) Off`}</span>
+                        </p>
+                      </div>
+                    </li>
+                  ))}
               </ul>
             </div>
           </div>

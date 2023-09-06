@@ -165,7 +165,11 @@ const AdminAddNewProduct = (props: Props) => {
 
           <ToastContainer className='mt-20' />
 
-          <button onClick={handleAddProduct} className='btn-full'>
+          <button
+            disabled={isLoading}
+            onClick={handleAddProduct}
+            className='btn-full'
+          >
             {isLoading ? (
               <ComponentLevelLoader
                 text={
