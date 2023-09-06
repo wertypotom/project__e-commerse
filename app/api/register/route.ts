@@ -57,8 +57,6 @@ export async function POST(req: NextRequest) {
       });
     }
   } catch (error) {
-    console.log('Error in new user registartion');
-
     return NextResponse.json({
       status: 'fail',
       message: 'Something went wrong, please try again',

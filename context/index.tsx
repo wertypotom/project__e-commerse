@@ -3,6 +3,8 @@
 import { IUser } from '@/types/user';
 import { createContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import { IProduct } from '@/types/product';
+import { Options } from '@/types/input';
 
 type GlobalStateProps = {
   children: React.ReactNode;
@@ -16,6 +18,9 @@ export default function GlobalState({ children }: GlobalStateProps) {
   const [user, setUser] = useState<Partial<IUser & { id: string }> | undefined>(
     undefined
   );
+  const [selectedProduct, setSelectedProduct] = useState<
+    (IProduct<Options[]> & { id: string }) | null
+  >(null);
 
   useEffect(() => {
     if (!Cookies.get('token')) return;

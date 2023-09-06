@@ -37,6 +37,42 @@ export const addNewProduct = async (
   }
 };
 
+export const updateProduct = async (
+  formData: IProduct<any[]>
+): Promise<ReturnTypeToAddProduct | undefined> => {
+  try {
+    const response = await fetch('/api/admin/update-product', {
+      method: 'PUT',
+      body: JSON.stringify(formData),
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    });
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteProduct = async (
+  id: string
+): Promise<ReturnTypeToAddProduct | undefined> => {
+  try {
+    const response = await fetch(`/api/admin/delete-product?id=${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    });
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getAllAdminProducts = async (): Promise<
   ReturnTypeToGetProducts | undefined
 > => {

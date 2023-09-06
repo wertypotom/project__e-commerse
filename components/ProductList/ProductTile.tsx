@@ -14,7 +14,9 @@ const ProductTile = ({ item }: Props) => {
   return (
     <div onClick={() => router.push(`/product/${item._id}`)} className='h-full'>
       <div className='overflow-hideen aspect-w-1 aspect-h-1 h-52'>
-        <img
+        <Image
+          width={10000}
+          height={10000}
           src={item.imageUrl}
           alt='Product image'
           className='h-full w-full object-cover transition-all duration-300 group-hover:scale-125'
