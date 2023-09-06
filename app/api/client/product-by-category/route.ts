@@ -8,22 +8,17 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
   try {
     await connectToDb();
-
     // check whether user athed
 
-    const allProducts = await Product.find({});
+    const { searchParams } = new URL(req.url);
+    const category = searchParams.get('category');
 
-    if (!allProducts) {
-      return NextResponse.json({
-        status: 'fail',
-        message: 'No products found',
-      });
-    }
+    const allProducts = await Product.find(category ? { category } : {});
 
     return NextResponse.json({
       status: 'success',
       data: {
-        products: allProducts,
+        products: allProducts || [],
       },
     });
   } catch (error) {

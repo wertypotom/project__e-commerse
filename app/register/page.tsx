@@ -50,8 +50,6 @@ const RegistrationPage = (props: Props) => {
   ) => {
     const data = await registerUser(formData);
     setFormData(initialFormData);
-
-    console.log(data);
   };
 
   const renderFormFields = () => {

@@ -52,7 +52,10 @@ const ProductButton = ({ item }: Props) => {
           <button className='btn' onClick={updateProduct}>
             Update
           </button>
-          <button onClick={() => handleDeleteProduct(item._id)} className='btn'>
+          <button
+            onClick={() => handleDeleteProduct(item._id || '')}
+            className='btn'
+          >
             {isLoading ? (
               <ComponentLevelLoader
                 text={'Deleting the product'}

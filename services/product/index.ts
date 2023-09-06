@@ -19,9 +19,11 @@ type ReturnTypeToGetProducts = {
 };
 
 export const addNewProduct = async (
-  formData: IProduct<any[]>
+  formData: IProductWithServerId<any[]>
 ): Promise<ReturnTypeToAddProduct | undefined> => {
   try {
+    delete formData._id;
+
     const response = await fetch('/api/admin/add-product', {
       method: 'POST',
       body: JSON.stringify(formData),
@@ -79,6 +81,25 @@ export const getAllAdminProducts = async (): Promise<
   try {
     const response = await fetch(
       'http://localhost:3000/api/admin/all-products',
+      {
+        method: 'GET',
+        cache: 'no-store',
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getProductsByCategory = async (
+  category: string
+): Promise<ReturnTypeToGetProducts | undefined> => {
+  try {
+    console.log('calling');
+    const response = await fetch(
+      `http://localhost:3000/api/client/product-by-category?category=${category}`,
       {
         method: 'GET',
         cache: 'no-store',

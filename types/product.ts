@@ -11,5 +11,5 @@ export interface IProduct<T> {
 }
 
 export interface IProductWithServerId<T> extends IProduct<T> {
-  _id: string;
+  _id?: string;
 }
