@@ -1,12 +1,11 @@
 import connectToDb from '@/database';
 import { NextRequest, NextResponse } from 'next/server';
-import { productSchemaToAddNewOne } from '@/utils/validation';
-import Product from '@/models/product';
-import { truncate } from 'fs';
+import { cartPropsValidation } from '@/utils/validation';
+import Cart from '@/models/cart';
 
 export const dynamic = 'force-dynamic';
 
-export async function DELETE(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
     await connectToDb();
 
@@ -16,30 +15,32 @@ export async function DELETE(req: NextRequest) {
     if (!id) {
       return NextResponse.json({
         status: 'fail',
-        message: 'Product id is required',
+        message: 'Something went wrong. Please try again',
       });
     }
 
-    const product = await Product.findByIdAndDelete(id);
+    const userCartItems = await Cart.find({ userID: id })
+      .populate('userID')
+      .populate('productID');
 
-    if (!product) {
+    if (!userCartItems) {
       return NextResponse.json({
         status: 'fail',
-        message: 'Failed to delete Product',
+        message: 'No cart items found',
       });
     }
 
     return NextResponse.json({
       status: 'success',
+      message: 'Product added successfully',
       data: {
-        product: product,
+        products: userCartItems,
       },
-      message: 'Product deleted successfully !',
     });
   } catch (error) {
     return NextResponse.json({
       status: 'fail',
-      message: 'Something went wrong, please, try again',
+      message: 'Something went wrong. Please try again',
       error,
     });
   }

@@ -123,7 +123,6 @@ export const getProductById = async (
   id: string
 ): Promise<ReturnTypeToGetProduct | undefined> => {
   try {
-    console.log('id', id);
     const response = await fetch(
       `http://localhost:3000/api/client/product-by-id?id=${id}`,
       {

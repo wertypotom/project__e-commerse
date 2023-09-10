@@ -1,6 +1,6 @@
 import { Options } from '@/types/input';
 import { IProduct } from '@/types/product';
-import { Schema, model, models, Types } from 'mongoose';
+import { Schema, model, models, Types, Model } from 'mongoose';
 
 const productSchema = new Schema<IProduct<Types.Array<Options>>>(
   {
@@ -18,7 +18,7 @@ const productSchema = new Schema<IProduct<Types.Array<Options>>>(
   { timestamps: true }
 );
 
-const Product =
+const Product: Model<IProduct<Types.Array<Options>>> =
   models.Product ||
   model<IProduct<Types.Array<Options>>>('Product', productSchema);
 

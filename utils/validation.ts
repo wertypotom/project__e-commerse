@@ -33,3 +33,8 @@ export const productSchemaToAddNewOne = Joi.object({
   priceDrop: Joi.number().required(),
   imageUrl: Joi.string().required(),
 });
+
+export const cartPropsValidation = Joi.object({
+  userID: Joi.string().required(),
+  productID: Joi.string().required(),
+});

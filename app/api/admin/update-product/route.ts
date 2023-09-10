@@ -2,25 +2,12 @@ import connectToDb from '@/database';
 import { NextRequest, NextResponse } from 'next/server';
 import { productSchemaToAddNewOne } from '@/utils/validation';
 import Product from '@/models/product';
-import { truncate } from 'fs';
 
 export const dynamic = 'force-dynamic';
 
 export async function PUT(req: NextRequest) {
   try {
     await connectToDb();
-
-    // check whether user athed
-
-    // check whether user is Admin
-    const user = 'admin';
-
-    if (user !== 'admin') {
-      return NextResponse.json({
-        status: 'fail',
-        message: 'You are not authorized to add product',
-      });
-    }
 
     const response = await req.json();
 

@@ -9,8 +9,6 @@ export async function GET(req: NextRequest) {
   try {
     await connectToDb();
 
-    // check whether user athed
-
     const allProducts = await Product.find({});
 
     if (!allProducts) {

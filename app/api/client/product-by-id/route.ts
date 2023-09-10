@@ -15,8 +15,6 @@ export async function GET(req: NextRequest) {
 
     const product = await Product.findById(id);
 
-    console.log('product  ', product);
-
     if (!product) {
       return NextResponse.json({
         status: 'fail',

@@ -8,6 +8,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react';
 import ComponentLevelLoader from '../Loader';
 import { ToastContainer } from 'react-toastify';
+import { addToCart } from '@/services/cart';
 
 type Props = {
   item: IProductWithServerId<Options[]>;
@@ -17,7 +18,7 @@ const ProductButton = ({ item }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { setSelectedProduct } = useContext(GlobalContext);
+  const { setSelectedProduct, user } = useContext(GlobalContext);
 
   const isAdminView = pathname.includes('admin-view');
 
@@ -26,10 +27,28 @@ const ProductButton = ({ item }: Props) => {
     router.push('/admin-view/add-product');
   };
 
-  const handleDeleteProduct = async (id: string) => {
+  const handleAddToCart = async () => {
     try {
       setIsLoading(true);
-      const res = await deleteProduct(id);
+      const res = await addToCart({
+        productID: item._id!,
+        userID: user?.id!,
+      });
+
+      if (res.status === 'fail') throw new Error(res.message);
+
+      showSuccessToast(res.message);
+    } catch (error) {
+      showErrorToast((error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteProduct = async () => {
+    try {
+      setIsLoading(true);
+      const res = await deleteProduct(item._id!);
 
       if (!res?.data) throw new Error(res?.message);
       showSuccessToast(res.message);
@@ -54,7 +73,7 @@ const ProductButton = ({ item }: Props) => {
           </button>
           <button
             disabled={isLoading}
-            onClick={() => handleDeleteProduct(item._id || '')}
+            onClick={handleDeleteProduct}
             className='btn'
           >
             {isLoading ? (
@@ -70,7 +89,17 @@ const ProductButton = ({ item }: Props) => {
         </>
       ) : (
         <>
-          <button className='btn'>Add to cart</button>
+          <button onClick={handleAddToCart} className='btn'>
+            {isLoading ? (
+              <ComponentLevelLoader
+                text={'Adding the product'}
+                color={'#ffffff'}
+                loading={isLoading}
+              />
+            ) : (
+              'Add Product'
+            )}
+          </button>
         </>
       )}
     </>

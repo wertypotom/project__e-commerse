@@ -6,12 +6,24 @@ import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { Options } from '@/types/input';
 import { IProductWithServerId } from '@/types/product';
+import { addToCart } from '@/services/cart';
 
 type Props = {
   item: IProductWithServerId<Options[]>;
 };
 
 function ProductCard({ item }: Props) {
+  const { user } = useContext(GlobalContext);
+
+  const handleAddToCart = async () => {
+    const res = await addToCart({
+      productID: item._id!,
+      userID: user?.id!,
+    });
+
+    console.log('response  ', res);
+  };
+
   return (
     <section className='mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8'>
       <div className='container mx-auto px-4'>
@@ -79,10 +91,7 @@ function ProductCard({ item }: Props) {
                   ).toFixed(2)}`}</h1>
                 ) : null}
               </div>
-              <button
-                type='button'
-                className='mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium tracking-wide uppercase text-white'
-              >
+              <button type='button' className='btn' onClick={handleAddToCart}>
                 Add to Cart
               </button>
             </div>

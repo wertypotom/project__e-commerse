@@ -1,7 +1,7 @@
 import connectToDb from '@/database';
 import { NextRequest, NextResponse } from 'next/server';
-import { productSchemaToAddNewOne } from '@/utils/validation';
-import Product from '@/models/product';
+import { cartPropsValidation } from '@/utils/validation';
+import Cart from '@/models/cart';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,27 +10,11 @@ export async function POST(req: NextRequest) {
     await connectToDb();
 
     const response = await req.json();
+    const { productID, userID } = response;
 
-    const {
-      name,
-      description,
-      price,
-      category,
-      sizes,
-      onSale,
-      priceDrop,
-      imageUrl,
-    } = response;
-
-    const { error: validationError } = productSchemaToAddNewOne.validate({
-      name,
-      description,
-      price,
-      category,
-      sizes,
-      onSale,
-      priceDrop,
-      imageUrl,
+    const { error: validationError } = cartPropsValidation.validate({
+      productID,
+      userID,
     });
 
     if (validationError) {
@@ -40,12 +24,23 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const newProduct = await Product.create(response);
+    const isItemExist = await Cart.find({ productID, userID });
 
-    if (!newProduct) {
+    console.log('existed ', isItemExist);
+
+    if (!isItemExist.length) {
       return NextResponse.json({
         status: 'fail',
-        message: 'Failed to add new product',
+        message: 'Product is already added to cart. Add different product',
+      });
+    }
+
+    const product = await Cart.create(req);
+
+    if (!product) {
+      return NextResponse.json({
+        status: 'fail',
+        message: 'Failed to add product to Cart',
       });
     }
 
@@ -53,7 +48,7 @@ export async function POST(req: NextRequest) {
       status: 'success',
       message: 'Product added successfully',
       data: {
-        product: newProduct,
+        product,
       },
     });
   } catch (error) {

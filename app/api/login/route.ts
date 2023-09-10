@@ -3,10 +3,13 @@ import User from '@/models/user';
 import { NextRequest, NextResponse } from 'next/server';
 import { compare, hash } from 'bcryptjs';
 import { userSchemaForValidationOnLogin } from '@/utils/validation';
-import jwt from 'jsonwebtoken';
+import { SignJWT } from 'jose';
 
 // 'force-dynamic': Force dynamic rendering and uncached data fetching of a layout or page by disabling all caching of fetch requests and always revalidating.
 export const dynamic = 'force-dynamic';
+
+const secret = new TextEncoder().encode('super-secret-key');
+const alg = 'HS256';
 
 export async function POST(req: NextRequest) {
   await connectToDb();
@@ -48,15 +51,20 @@ export async function POST(req: NextRequest) {
     }
 
     // generate token before expiration
-    const token = jwt.sign(
-      {
-        id: user._id,
-        email: user.email,
-        role: user.role,
-      },
-      'super-secret-key',
-      { expiresIn: '1d' }
-    );
+    // const token = jwt.sign(
+    //   {
+    //     id: user._id,
+    //     email: user.email,
+    //     role: user.role,
+    //   },
+    //   'super-secret-key',
+    //   { expiresIn: '1d' }
+    // );
+    const token = await new SignJWT({ 'urn:example:claim': true })
+      .setProtectedHeader({ alg })
+      .setIssuedAt()
+      .setExpirationTime('1d')
+      .sign(secret);
 
     const finalData = {
       token,

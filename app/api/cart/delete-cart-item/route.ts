@@ -1,8 +1,7 @@
 import connectToDb from '@/database';
 import { NextRequest, NextResponse } from 'next/server';
-import { productSchemaToAddNewOne } from '@/utils/validation';
-import Product from '@/models/product';
-import { truncate } from 'fs';
+import { cartPropsValidation } from '@/utils/validation';
+import Cart from '@/models/cart';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,30 +15,30 @@ export async function DELETE(req: NextRequest) {
     if (!id) {
       return NextResponse.json({
         status: 'fail',
-        message: 'Product id is required',
+        message: 'Item id is required',
       });
     }
 
-    const product = await Product.findByIdAndDelete(id);
+    const cartItem = await Cart.findByIdAndDelete(id);
 
-    if (!product) {
+    if (!cartItem) {
       return NextResponse.json({
         status: 'fail',
-        message: 'Failed to delete Product',
+        message: 'Failed to delete item from cart',
       });
     }
 
     return NextResponse.json({
       status: 'success',
       data: {
-        product: product,
+        product: cartItem,
       },
-      message: 'Product deleted successfully !',
+      message: 'Item deleted successfully !',
     });
   } catch (error) {
     return NextResponse.json({
       status: 'fail',
-      message: 'Something went wrong, please, try again',
+      message: 'Something went wrong. Please try again',
       error,
     });
   }

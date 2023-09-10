@@ -4,7 +4,7 @@ import { getProductsByCategory } from '@/services/product';
 const ClientAllProducts = async () => {
   const data = await getProductsByCategory('');
 
-  if (!data?.data.products.length) {
+  if (!data?.data?.products.length) {
     return <h1 className='mt-12 mx-auto'>No Products Found</h1>;
   }
 
