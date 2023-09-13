@@ -5,23 +5,23 @@ import { useContext } from 'react';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { Options } from '@/types/input';
-import { IProductWithServerId } from '@/types/product';
+import { IProduct } from '@/types/product';
 import { addToCart } from '@/services/cart';
 
 type Props = {
-  item: IProductWithServerId<Options[]>;
+  item: IProduct<Options[]>;
 };
 
 function ProductCard({ item }: Props) {
   const { user } = useContext(GlobalContext);
 
   const handleAddToCart = async () => {
-    const res = await addToCart({
-      productID: item._id!,
-      userID: user?.id!,
-    });
-
-    console.log('response  ', res);
+    console.log('hello from here ?');
+    // const res = await addToCart({
+    //   productID: item._id!,
+    //   userID: user?.id!,
+    // });
+    // console.log('response  ', res);
   };
 
   return (

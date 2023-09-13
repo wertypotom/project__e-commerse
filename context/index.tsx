@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react';
 import Cookies from 'js-cookie';
-import { IProduct, IProductWithServerId } from '@/types/product';
+import { IProduct } from '@/types/product';
 import { Options } from '@/types/input';
 
 type TypeSetState<T> = Dispatch<SetStateAction<T>>;
@@ -20,6 +20,10 @@ type GlobalStateProps = {
 };
 
 type GlobalContextProviderProps = {
+  cartItems: IProduct<Options[]>[];
+  setCartItems: TypeSetState<IProduct<Options[]>[]>;
+  showCartModal: boolean;
+  setShowCartModal: TypeSetState<boolean>;
   showNavModal: boolean;
   setShowNavModal: TypeSetState<boolean>;
   isAuthedUser: boolean;
@@ -33,15 +37,19 @@ type GlobalContextProviderProps = {
       >
     | undefined
   >;
-  selectedProduct: IProductWithServerId<Options[]> | null;
-  setSelectedProduct: TypeSetState<IProductWithServerId<Options[]> | null>;
+  selectedProduct: IProduct<Options[]> | null;
+  setSelectedProduct: TypeSetState<IProduct<Options[]> | null>;
 };
 
 export const GlobalContext = createContext<GlobalContextProviderProps>({
+  cartItems: [],
+  showCartModal: false,
   isAuthedUser: false,
   selectedProduct: null,
   showNavModal: false,
   user: undefined,
+  setCartItems: () => {},
+  setShowCartModal: () => {},
   setIsAuthedUser: () => {},
   setSelectedProduct: () => {},
   setShowNavModal: () => {},
@@ -49,14 +57,16 @@ export const GlobalContext = createContext<GlobalContextProviderProps>({
 });
 
 export default function GlobalState({ children }: GlobalStateProps) {
+  const [showCartModal, setShowCartModal] = useState(false);
   const [showNavModal, setShowNavModal] = useState(false);
   const [isAuthedUser, setIsAuthedUser] = useState(false);
   const [user, setUser] = useState<Partial<IUser & { id: string }> | undefined>(
     undefined
   );
-  const [selectedProduct, setSelectedProduct] = useState<IProductWithServerId<
+  const [selectedProduct, setSelectedProduct] = useState<IProduct<
     Options[]
   > | null>(null);
+  const [cartItems, setCartItems] = useState<IProduct<Options[]>[]>([]);
 
   useEffect(() => {
     if (!Cookies.get('token')) return;
@@ -79,8 +89,19 @@ export default function GlobalState({ children }: GlobalStateProps) {
       setUser,
       selectedProduct,
       setSelectedProduct,
+      showCartModal,
+      setShowCartModal,
+      cartItems,
+      setCartItems,
     }),
-    [isAuthedUser, selectedProduct, showNavModal, user]
+    [
+      isAuthedUser,
+      selectedProduct,
+      showCartModal,
+      showNavModal,
+      user,
+      cartItems,
+    ]
   );
 
   return (

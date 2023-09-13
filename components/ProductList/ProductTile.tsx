@@ -3,9 +3,11 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { IProduct } from '@/types/product';
+import { Options } from '@/types/input';
 
 type Props = {
-  item: any;
+  item: IProduct<Options[]>;
 };
 
 const ProductTile = ({ item }: Props) => {

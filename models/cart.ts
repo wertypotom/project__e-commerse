@@ -1,17 +1,27 @@
 import { ICart } from '@/types/cart';
 import { Schema, model, models, Types, Model } from 'mongoose';
 
-const cartSchema = new Schema<ICart<Types.ObjectId>>(
+type SchemaType = ICart<Types.ObjectId>;
+
+const cartSchema = new Schema<SchemaType>(
   {
-    userID: { type: Schema.Types.ObjectId, ref: 'User' },
-    productID: { type: Schema.Types.ObjectId, ref: 'Products' },
-    quantity: { type: Number, required: true, default: 1 },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    products: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: 'Product',
+          required: true,
+        },
+        quantity: { type: Number, default: 1 },
+      },
+    ],
   },
   // timestamp for createdAt and updatedAt
   { timestamps: true }
 );
 
-const Cart: Model<ICart<Types.ObjectId>> =
-  models.Cart || model<ICart<Types.ObjectId>>('Cart', cartSchema);
+const Cart: Model<SchemaType> =
+  models.Cart || model<SchemaType>('Cart', cartSchema);
 
 export default Cart;

@@ -1,4 +1,6 @@
 import { ICart } from '@/types/cart';
+import { Options } from '@/types/input';
+import { IProduct } from '@/types/product';
 import Cookies from 'js-cookie';
 
 interface ReturnType {
@@ -19,7 +21,8 @@ interface MultipleProducts extends ReturnType {
 }
 
 export const addToCart = async (
-  formData: Omit<ICart<string>, 'quantity'>
+  userId: string,
+  formData: IProduct<Options[]>
 ): Promise<SingleProduct> => {
   const res = await fetch('/api/cart/add-to-cart', {
     method: 'POST',
@@ -27,7 +30,10 @@ export const addToCart = async (
       'content-type': 'application/json',
       Authorization: `Bearer ${Cookies.get('token')}`,
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify({
+      userId: userId,
+      productData: formData,
+    }),
   });
 
   return res.json();
