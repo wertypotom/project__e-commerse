@@ -1,5 +1,5 @@
 import { Options } from '@/types/input';
-import { IProduct, IProductWithServerId } from '@/types/product';
+import { IProduct } from '@/types/product';
 import Cookies from 'js-cookie';
 
 type ReturnTypeToAddProduct = {
@@ -14,7 +14,7 @@ type ReturnTypeToGetProducts = {
   status: string;
   message: string;
   data: {
-    products: IProductWithServerId<Options[]>[];
+    products: IProduct<Options[]>[];
   };
 };
 
@@ -22,12 +22,12 @@ type ReturnTypeToGetProduct = {
   status: string;
   message: string;
   data: {
-    product: IProductWithServerId<Options[]>;
+    product: IProduct<Options[]>;
   };
 };
 
 export const addNewProduct = async (
-  formData: IProductWithServerId<any[]>
+  formData: IProduct<any[]>
 ): Promise<ReturnTypeToAddProduct | undefined> => {
   try {
     delete formData._id;
@@ -48,7 +48,7 @@ export const addNewProduct = async (
 };
 
 export const updateProduct = async (
-  formData: IProduct<any[]>
+  formData: IProduct<Options[]>
 ): Promise<ReturnTypeToAddProduct | undefined> => {
   try {
     const response = await fetch('/api/admin/update-product', {

@@ -2,7 +2,9 @@ import { Options } from '@/types/input';
 import { IProduct } from '@/types/product';
 import { Schema, model, models, Types, Model } from 'mongoose';
 
-const productSchema = new Schema<IProduct<Types.Array<Options>>>(
+type SchemaType = Omit<IProduct<Types.Array<Options>>, '_id'>;
+
+const productSchema = new Schema<SchemaType>(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
@@ -18,8 +20,7 @@ const productSchema = new Schema<IProduct<Types.Array<Options>>>(
   { timestamps: true }
 );
 
-const Product: Model<IProduct<Types.Array<Options>>> =
-  models.Product ||
-  model<IProduct<Types.Array<Options>>>('Product', productSchema);
+const Product: Model<SchemaType> =
+  models.Product || model<SchemaType>('Product', productSchema);
 
 export default Product;

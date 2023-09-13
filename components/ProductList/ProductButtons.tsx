@@ -2,7 +2,7 @@
 import { GlobalContext } from '@/context';
 import { deleteProduct } from '@/services/product';
 import { Options } from '@/types/input';
-import { IProduct, IProductWithServerId } from '@/types/product';
+import { IProduct } from '@/types/product';
 import { showErrorToast, showSuccessToast } from '@/utils/toastHandler';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react';
@@ -11,14 +11,15 @@ import { ToastContainer } from 'react-toastify';
 import { addToCart } from '@/services/cart';
 
 type Props = {
-  item: IProductWithServerId<Options[]>;
+  item: IProduct<Options[]>;
 };
 
 const ProductButton = ({ item }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { setSelectedProduct, user } = useContext(GlobalContext);
+  const { setSelectedProduct, user, setCartItems, cartItems } =
+    useContext(GlobalContext);
 
   const isAdminView = pathname.includes('admin-view');
 
@@ -28,15 +29,11 @@ const ProductButton = ({ item }: Props) => {
   };
 
   const handleAddToCart = async () => {
+    setCartItems((prev) => [...prev, item]);
     try {
       setIsLoading(true);
-      const res = await addToCart({
-        productID: item._id!,
-        userID: user?.id!,
-      });
-
-      if (res.status === 'fail') throw new Error(res.message);
-
+      const res = await addToCart(user?.id!, item);
+      //   if (res.status === 'fail') throw new Error(res.message);
       showSuccessToast(res.message);
     } catch (error) {
       showErrorToast((error as Error).message);

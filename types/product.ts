@@ -1,4 +1,5 @@
 export interface IProduct<T> {
+  _id?: string;
   name: string;
   description: string;
   price: number;
@@ -8,8 +9,4 @@ export interface IProduct<T> {
   onSale: 'yes' | 'no';
   priceDrop: number;
   imageUrl: string;
-}
-
-export interface IProductWithServerId<T> extends IProduct<T> {
-  _id?: string;
 }

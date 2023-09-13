@@ -2,23 +2,13 @@ import React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 type Props = {
   show: boolean;
-  showModalTitle: boolean;
-  title?: any;
   content: React.ReactNode;
-  showButtons?: any;
-  buttonComponent?: any;
+  title?: any;
+  buttonComponent?: React.ReactNode;
   onClose: () => void;
 };
 
-const Modal = ({
-  title,
-  onClose,
-  showModalTitle,
-  show,
-  buttonComponent,
-  content,
-  showButtons,
-}: Props) => {
+const Modal = ({ title, onClose, show, buttonComponent, content }: Props) => {
   return (
     <Transition.Root show={show} as={React.Fragment}>
       <Dialog onClose={onClose} as='div' className='relative z-10'>
@@ -49,7 +39,7 @@ const Modal = ({
                 <Dialog.Panel className='w-screen max-w-md'>
                   <div className='flex h-full flex-col overflow-y-scroll bg-white shadow-xl'>
                     <div className='flex-1 overflow-y-auto px-4 py-6 sm:px-6'>
-                      {showModalTitle && (
+                      {title && (
                         <div className='flex items-start justify-between'>
                           <Dialog.Title>{title}</Dialog.Title>
                         </div>
@@ -57,7 +47,7 @@ const Modal = ({
 
                       <div className='mt-16'>{content}</div>
                     </div>
-                    {showButtons && (
+                    {buttonComponent && (
                       <div className='border-t border-gray-300 px-4 py-6 sm:px-6'>
                         {buttonComponent}
                       </div>

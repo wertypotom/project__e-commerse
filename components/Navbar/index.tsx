@@ -8,6 +8,8 @@ import useMediaQuery from '@/hooks/useMediaQuery';
 import ButtonBurgerMenu from '../Button/ButtonBurgerMenu';
 import Cookies from 'js-cookie';
 import { useRouter, usePathname } from 'next/navigation';
+import CartList from '../Cart/CartList';
+import CartButtons from '../Cart/CartButtons';
 
 type Props = {};
 
@@ -19,8 +21,10 @@ const Navbar = (props: Props) => {
     user,
     setIsAuthedUser,
     setUser,
-    selectedProduct,
+    cartItems,
     setSelectedProduct,
+    showCartModal,
+    setShowCartModal,
   } = useContext(GlobalContext);
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
   const router = useRouter();
@@ -56,7 +60,7 @@ const Navbar = (props: Props) => {
           {/* Logo left */}
           <div
             onClick={() => navigateTo('/')}
-            className='flex items-center cursor-pointer'
+            className='lg:flex items-center cursor-pointer hidden'
           >
             <span className='self-center text-2xl font-semibold whitespace-nowrap'>
               Ecommercy
@@ -67,7 +71,12 @@ const Navbar = (props: Props) => {
             {!isAdminView && isAuthedUser && (
               <>
                 <button className='btn'>Account</button>
-                <button className='btn'>Cart</button>
+                <button
+                  className='btn'
+                  onClick={() => setShowCartModal((prev: boolean) => !prev)}
+                >
+                  Cart
+                </button>
               </>
             )}
             {user?.role === 'admin' ? (
@@ -105,9 +114,15 @@ const Navbar = (props: Props) => {
 
       <Modal
         content={<NavItems show isAdminView={isAdminView} />}
-        showModalTitle={false}
         show={showNavModal}
         onClose={() => setShowNavModal(false)}
+      />
+
+      <Modal
+        content={<CartList />}
+        show={showCartModal}
+        onClose={() => setShowCartModal(false)}
+        buttonComponent={<CartButtons cartItems={cartItems} />}
       />
     </>
   );

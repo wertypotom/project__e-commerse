@@ -2,15 +2,13 @@
 
 import { getAllAdminProducts } from '@/services/product';
 import { Options } from '@/types/input';
-import { IProductWithServerId } from '@/types/product';
+import { IProduct } from '@/types/product';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const [products, setProducts] = useState<IProductWithServerId<Options[]>[]>(
-    []
-  );
+  const [products, setProducts] = useState<IProduct<Options[]>[]>([]);
   const router = useRouter();
 
   async function getProducts() {

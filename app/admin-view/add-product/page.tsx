@@ -10,18 +10,13 @@ import Input from '@/components/Form/Input';
 import Select from '@/components/Form/Select';
 import Tiles from '@/components/Form/Tile';
 import { initializeApp } from 'firebase/app';
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from 'firebase/storage';
-import React, { useContext, useEffect, useState } from 'react';
+import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import React, { useContext, useState } from 'react';
 import {
   extractImageUrlFirebase,
   getUniqueFilename,
 } from '@/utils/filesHandler';
-import { IProduct, IProductWithServerId } from '@/types/product';
+import { IProduct } from '@/types/product';
 import { Options } from '@/types/input';
 import { addNewProduct, updateProduct } from '@/services/product';
 import { showErrorToast, showSuccessToast } from '@/utils/toastHandler';
@@ -35,7 +30,7 @@ const storage = getStorage(app, FIREBASE_STORAGE_URL);
 
 type Props = {};
 
-const initialFormData: IProductWithServerId<any[]> = {
+const initialFormData: IProduct<any[]> = {
   _id: '',
   name: '',
   price: 0,

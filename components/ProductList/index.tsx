@@ -3,12 +3,12 @@
 import React, { useEffect } from 'react';
 import ProductTile from './ProductTile';
 import ProductButtons from './ProductButtons';
-import { IProductWithServerId } from '@/types/product';
+import { IProduct } from '@/types/product';
 import { Options } from '@/types/input';
 import { useRouter } from 'next/navigation';
 
 type Props = {
-  data: IProductWithServerId<Options[]>[];
+  data: IProduct<Options[]>[];
 };
 
 const ProductList = ({ data }: Props) => {
@@ -20,7 +20,7 @@ const ProductList = ({ data }: Props) => {
   }, [router]);
 
   return (
-    <section className='bg-white py-12 sm:py-0'>
+    <section className='bg-white py-2 sm:py-0'>
       <div className='mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8'>
         <div className='mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4 sm:gap-4 lg:mt-16'>
           {data.length &&
