@@ -201,3 +201,4 @@ export const FIREBASE_CONFIG = {
 export const FIREBASE_STORAGE_URL = 'gs://e-comerce-6df7e.appspot.com';
 
 const hello = 'hello';
+const notHello = 'Not hello';
